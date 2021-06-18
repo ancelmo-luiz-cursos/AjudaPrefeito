@@ -30,9 +30,17 @@ namespace AjudaPrefeito
 
             var totalEleitoresPorRua = ListarRuas(listaDeCasas);
 
-            foreach (var item in totalEleitoresPorRua)
+            var query = totalEleitoresPorRua.GroupBy(x => x.Id)
+                .Select(g => new { 
+                    Key = g.Key,
+                    Rua = g.First().Nome,
+                    Cep = g.First().Cep,
+                    Total = g.Sum(s => s.Casas.First().TotalEleitores)
+                });
+
+            foreach (var item in query)
             {
-                Console.WriteLine($"IdRua: {item.Id} - CEP: {item.Cep} - Rua: {item.Nome}");
+                Console.WriteLine($"IdRua: {item.Key} - CEP: {item.Cep} - Rua: {item.Rua} - Total Eleitor: {item.Total}");
             }
 
             Console.ReadKey();
@@ -44,6 +52,8 @@ namespace AjudaPrefeito
             
             foreach (var item in casas.OrderByDescending(x => x.TotalEleitores))
             {
+                item.Rua.Casas.Add(item);
+
                 listaDeRuas.Add(item.Rua);
             }
 

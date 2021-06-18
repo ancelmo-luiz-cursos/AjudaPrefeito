@@ -13,6 +13,8 @@ namespace AjudaPrefeito.Dominio
             Id = id;
             Cep = cep;
             Nome = nome;
+
+            Casas = new List<Casa>();
         }
 
         public int Id { get; private set; }
